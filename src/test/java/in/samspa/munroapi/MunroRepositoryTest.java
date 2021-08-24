@@ -21,9 +21,13 @@ class MunroRepositoryTest {
     }
 
     @Test
-    void getMunroWithName() {
+    void findFirstMunro() {
         List<Munro> foundMunro = munroRepository.find();
         assertNotEquals(0, foundMunro.size());
-        assertEquals("Ben Chonzie", foundMunro.get(0).getName());
+        Munro firstMunro = foundMunro.get(0);
+        assertEquals("Ben Chonzie", firstMunro.getName());
+        assertEquals(931, firstMunro.getHeight());
+        assertEquals("MUN", firstMunro.getCategory());
+        assertEquals("NN773308", firstMunro.getGridReference());
     }
 }
