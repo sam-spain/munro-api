@@ -4,6 +4,9 @@ import com.opencsv.bean.CsvBindByName;
 
 public class Munro {
 
+    public Munro() {
+    }
+
     Munro(String name, Double height, String category, String gridReference) {
         this.name = name;
         this.height = height;

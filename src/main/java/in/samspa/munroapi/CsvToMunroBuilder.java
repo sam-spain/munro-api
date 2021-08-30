@@ -3,7 +3,6 @@ package in.samspa.munroapi;
 import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
 import com.opencsv.bean.HeaderColumnNameMappingStrategy;
-import org.springframework.stereotype.Component;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -14,7 +13,6 @@ import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.List;
 
-@Component
 class CsvToMunroBuilder {
 
     List<Munro> convertCsvToMunro(String path) {
@@ -30,7 +28,7 @@ class CsvToMunroBuilder {
                     .build();
 
             return csvToBean.parse();
-        } catch (IOException e) {
+        } catch (RuntimeException | IOException e) {
             return Collections.emptyList();
         }
     }
