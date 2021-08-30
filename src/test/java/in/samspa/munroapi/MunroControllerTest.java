@@ -35,7 +35,7 @@ class MunroControllerTest {
     void getData() throws Exception {
         Munro firstMunro = new Munro("Sam", 2.5D, "MUN", "000112");
         Munro secondMunro = new Munro("Sofia", 3.5D, "TOP", "223110");
-        when(munroService.findData()).thenReturn(Arrays.asList(firstMunro, secondMunro));
+        when(munroService.findData(null)).thenReturn(Arrays.asList(firstMunro, secondMunro));
 
         mockMvc.perform(get("/")).andDo(print()).andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(2)))

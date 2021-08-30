@@ -7,7 +7,7 @@ import java.util.List;
 @Service
 public class MunroService {
 
-    List<Munro> findData() {
+    List<Munro> findData(MunroRequest munroRequest) {
        return null;
     }
 }
