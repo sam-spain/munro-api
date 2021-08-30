@@ -26,19 +26,19 @@ public class Munro {
     @CsvBindByName(column = "Grid Ref")
     private String gridReference;
 
-    String getName() {
+    public String getName() {
         return name;
     }
 
-    Double getHeight() {
+    public Double getHeight() {
         return height;
     }
 
-    String getCategory() {
+    public String getCategory() {
         return category;
     }
 
-    String getGridReference() {
+    public String getGridReference() {
         return gridReference;
     }
 
