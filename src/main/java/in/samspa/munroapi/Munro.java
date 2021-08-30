@@ -41,4 +41,8 @@ public class Munro {
     String getGridReference() {
         return gridReference;
     }
+
+    boolean allValuesExist() {
+        return height != null && !name.isEmpty() && !category.isEmpty() && !gridReference.isEmpty();
+    }
 }

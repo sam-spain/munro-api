@@ -14,6 +14,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 class MunroRepository {
@@ -27,6 +28,6 @@ class MunroRepository {
     }
 
     List<Munro> find() {
-        return csvToMunroBuilder.convertCsvToMunro(fileLocation);
+        return csvToMunroBuilder.convertCsvToMunro(fileLocation).stream().filter(Munro::allValuesExist).collect(Collectors.toList());
     }
 }

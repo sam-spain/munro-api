@@ -44,4 +44,13 @@ class MunroRepositoryTest {
         assertEquals(expectedMunro.getGridReference(), firstMunro.getGridReference());
     }
 
+    @Test
+    void filterAnyInvalidMunroData() {
+        Munro expectedMunro = new Munro("", null, "", "");
+        when(mockedBuilder.convertCsvToMunro(fileLocation)).
+                thenReturn(Collections.singletonList(expectedMunro));
+        List<Munro> foundMunro = munroRepository.find();
+        assertEquals(0, foundMunro.size());
+    }
+
 }
