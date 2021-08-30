@@ -4,6 +4,13 @@ import com.opencsv.bean.CsvBindByName;
 
 public class Munro {
 
+    Munro(String name, Double height, String category, String gridReference) {
+        this.name = name;
+        this.height = height;
+        this.category = category;
+        this.gridReference = gridReference;
+    }
+
     @CsvBindByName(column = "Name")
     private String name;
 

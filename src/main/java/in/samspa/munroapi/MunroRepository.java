@@ -3,6 +3,7 @@ package in.samspa.munroapi;
 import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
 import com.opencsv.bean.HeaderColumnNameMappingStrategy;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.BufferedReader;
@@ -19,21 +20,13 @@ class MunroRepository {
 
     private String fileLocation = "src/main/resources/static/munrotab_v6.2.csv";
 
+    private CsvToMunroBuilder csvToMunroBuilder;
+
+    public MunroRepository(CsvToMunroBuilder csvToMunroBuilder) {
+        this.csvToMunroBuilder = csvToMunroBuilder;
+    }
+
     List<Munro> find() {
-        Path dataPath = Paths.get(fileLocation);
-
-        try(BufferedReader br = Files.newBufferedReader(dataPath, StandardCharsets.ISO_8859_1)) {
-            HeaderColumnNameMappingStrategy<Munro> strategy = new HeaderColumnNameMappingStrategy<>();
-            strategy.setType(Munro.class);
-
-            CsvToBean<Munro> csvToBean = new CsvToBeanBuilder<Munro>(br)
-                    .withMappingStrategy(strategy)
-                    .withIgnoreLeadingWhiteSpace(true)
-                    .build();
-
-            return csvToBean.parse();
-        } catch (IOException e) {
-            return Collections.emptyList();
-        }
+        return csvToMunroBuilder.convertCsvToMunro(fileLocation);
     }
 }
