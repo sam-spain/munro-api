@@ -39,7 +39,7 @@ class MunroControllerTest {
     void getData() throws Exception {
         Munro firstMunro = new Munro("Sam", 2.5D, "MUN", "000112");
         Munro secondMunro = new Munro("Sofia", 3.5D, "TOP", "223110");
-        when(munroService.findData(null)).thenReturn(Arrays.asList(firstMunro, secondMunro));
+        when(munroService.findData(ArgumentMatchers.any())).thenReturn(Arrays.asList(firstMunro, secondMunro));
 
         mockMvc.perform(get("/")).andDo(print()).andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(2)))
@@ -60,11 +60,22 @@ class MunroControllerTest {
         ArgumentCaptor<MunroRequest> munroRequestCaptor = ArgumentCaptor.forClass(MunroRequest.class);
         verify(munroService).findData(munroRequestCaptor.capture());
         MunroRequest sentRequest = munroRequestCaptor.getValue();
-        assertEquals(Integer.MAX_VALUE, sentRequest.getMaxHeight());
+        assertEquals(999999.0D, sentRequest.getMaxHeight());
         assertEquals(0, sentRequest.getMinHeight());
         assertEquals(MunroCategoryFilter.ALL, sentRequest.getCategoryFilter());
         assertEquals(Integer.MAX_VALUE, sentRequest.getMaxResults());
         assertEquals(Collections.emptyList(), sentRequest.getMunroSorts());
+    }
+
+    @Test
+    void queryWithMaxHeight() throws Exception {
+        when(munroService.findData(ArgumentMatchers.any())).thenReturn(Collections.emptyList());
+        mockMvc.perform(get("/").param("maxHeight", "25.5")).andDo(print()).andExpect(status().isOk());
+
+        ArgumentCaptor<MunroRequest> munroRequestCaptor = ArgumentCaptor.forClass(MunroRequest.class);
+        verify(munroService).findData(munroRequestCaptor.capture());
+        MunroRequest sentRequest = munroRequestCaptor.getValue();
+        assertEquals(25.5D, sentRequest.getMaxHeight());
     }
 
 }

@@ -46,6 +46,11 @@ public class MunroRequest {
         private double minHeight = 0;
         private MunroCategoryFilter categoryFilter = MunroCategoryFilter.ALL;
 
+        Builder withMaxHeight(Double maxHeight) {
+            this.maxHeight = maxHeight;
+            return this;
+        }
+
         public MunroRequest build() {
             return new MunroRequest(this);
         }
