@@ -2,12 +2,15 @@ package in.samspa.munroapi;
 
 
 import static org.hamcrest.Matchers.*;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
 import org.junit.jupiter.api.Test;
 
+import org.mockito.ArgumentCaptor;
+import org.mockito.ArgumentMatchers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -18,6 +21,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.hamcrest.Matchers.*;
 
 import java.util.Arrays;
+import java.util.Collections;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -47,6 +51,20 @@ class MunroControllerTest {
                 .andExpect(jsonPath("$[1].height", is(secondMunro.getHeight())))
                 .andExpect(jsonPath("$[1].category", is(secondMunro.getCategory())))
                 .andExpect(jsonPath("$[1].gridReference", is(secondMunro.getGridReference())));
+    }
+
+    @Test
+    void noQueryArgsCreatesDefaultQuery() throws Exception {
+        when(munroService.findData(ArgumentMatchers.any())).thenReturn(Collections.emptyList());
+        mockMvc.perform(get("/")).andDo(print()).andExpect(status().isOk());
+        ArgumentCaptor<MunroRequest> munroRequestCaptor = ArgumentCaptor.forClass(MunroRequest.class);
+        verify(munroService).findData(munroRequestCaptor.capture());
+        MunroRequest sentRequest = munroRequestCaptor.getValue();
+        assertEquals(Integer.MAX_VALUE, sentRequest.getMaxHeight());
+        assertEquals(0, sentRequest.getMinHeight());
+        assertEquals(MunroCategoryFilter.ALL, sentRequest.getCategoryFilter());
+        assertEquals(Integer.MAX_VALUE, sentRequest.getMaxResults());
+        assertEquals(Collections.emptyList(), sentRequest.getMunroSorts());
     }
 
 }

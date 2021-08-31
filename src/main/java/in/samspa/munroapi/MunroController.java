@@ -21,7 +21,7 @@ public class MunroController {
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public List<Munro> getData() {
-        return munroService.findData(null);
+        return munroService.findData(new MunroRequest.Builder().build());
     }
 
 }
