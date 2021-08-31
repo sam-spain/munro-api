@@ -6,7 +6,7 @@ import java.util.Optional;
 public enum MunroCategoryFilter {
     MUNRO("munro"),
     TOP("top"),
-    ALL("");
+    ALL("all");
 
     private String getParam;
 

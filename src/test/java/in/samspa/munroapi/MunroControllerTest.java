@@ -1,9 +1,10 @@
 package in.samspa.munroapi;
 
 
+import static in.samspa.munroapi.MunroSortingFields.CATEGORY;
+import static in.samspa.munroapi.MunroSortingFields.HEIGHT;
 import static org.hamcrest.Matchers.*;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
@@ -63,7 +64,7 @@ class MunroControllerTest {
         assertEquals(999999.0D, sentRequest.getMaxHeight());
         assertEquals(0, sentRequest.getMinHeight());
         assertEquals(MunroCategoryFilter.ALL, sentRequest.getCategoryFilter());
-        assertEquals(Integer.MAX_VALUE, sentRequest.getMaxResults());
+        assertEquals(9999, sentRequest.getMaxResults());
         assertEquals(Collections.emptyList(), sentRequest.getMunroSorts());
     }
 
@@ -76,6 +77,53 @@ class MunroControllerTest {
         verify(munroService).findData(munroRequestCaptor.capture());
         MunroRequest sentRequest = munroRequestCaptor.getValue();
         assertEquals(25.5D, sentRequest.getMaxHeight());
+    }
+
+    @Test
+    void queryWithMinHeight() throws Exception {
+        when(munroService.findData(ArgumentMatchers.any())).thenReturn(Collections.emptyList());
+        mockMvc.perform(get("/").param("minHeight", "10.4")).andDo(print()).andExpect(status().isOk());
+
+        ArgumentCaptor<MunroRequest> munroRequestCaptor = ArgumentCaptor.forClass(MunroRequest.class);
+        verify(munroService).findData(munroRequestCaptor.capture());
+        MunroRequest sentRequest = munroRequestCaptor.getValue();
+        assertEquals(10.4D, sentRequest.getMinHeight());
+    }
+
+    @Test
+    void queryWithTopFilter() throws Exception {
+        when(munroService.findData(ArgumentMatchers.any())).thenReturn(Collections.emptyList());
+        mockMvc.perform(get("/").param("categoryFilter", "top")).andDo(print()).andExpect(status().isOk());
+
+        ArgumentCaptor<MunroRequest> munroRequestCaptor = ArgumentCaptor.forClass(MunroRequest.class);
+        verify(munroService).findData(munroRequestCaptor.capture());
+        MunroRequest sentRquest = munroRequestCaptor.getValue();
+        assertEquals(MunroCategoryFilter.TOP, sentRquest.getCategoryFilter());
+    }
+
+    @Test
+    void queryWithSorts() throws Exception {
+        when(munroService.findData(ArgumentMatchers.any())).thenReturn(Collections.emptyList());
+        mockMvc.perform(get("/").param("sort", "height", "asc", "category", "desc"));
+
+        ArgumentCaptor<MunroRequest> munroRequestCaptor = ArgumentCaptor.forClass(MunroRequest.class);
+        verify(munroService).findData(munroRequestCaptor.capture());
+        MunroRequest sentRequest = munroRequestCaptor.getValue();
+        assertEquals(HEIGHT, sentRequest.getMunroSorts().get(0).getFieldToSort());
+        assertTrue(sentRequest.getMunroSorts().get(0).isAscending());
+        assertEquals(CATEGORY, sentRequest.getMunroSorts().get(1).getFieldToSort());
+        assertFalse(sentRequest.getMunroSorts().get(1).isAscending());
+    }
+
+    @Test
+    void queryWithMaxResults() throws Exception {
+        when(munroService.findData(ArgumentMatchers.any())).thenReturn(Collections.emptyList());
+        mockMvc.perform(get("/").param("maxResults", "10"));
+
+        ArgumentCaptor<MunroRequest> munroRequestCaptor = ArgumentCaptor.forClass(MunroRequest.class);
+        verify(munroService).findData(munroRequestCaptor.capture());
+        MunroRequest sentRequest = munroRequestCaptor.getValue();
+        assertEquals(10, sentRequest.getMaxResults());
     }
 
 }

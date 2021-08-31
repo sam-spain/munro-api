@@ -10,4 +10,12 @@ public class MunroSorts {
         this.fieldToSort = fieldToSort;
         this.isAscending = isAscending;
     }
+
+    public MunroSortingFields getFieldToSort() {
+        return fieldToSort;
+    }
+
+    public boolean isAscending() {
+        return isAscending;
+    }
 }

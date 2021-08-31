@@ -20,11 +20,4 @@ class MunroCategoryFilterTest {
         assertTrue(category.isPresent());
         assertEquals(MunroCategoryFilter.TOP, category.get());
     }
-
-    @Test
-    void emptyStringRecognisedAsAll() {
-        Optional<MunroCategoryFilter> category = MunroCategoryFilter.fromString("");
-        assertTrue(category.isPresent());
-        assertEquals(MunroCategoryFilter.ALL, category.get());
-    }
 }

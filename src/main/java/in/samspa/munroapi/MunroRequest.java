@@ -51,6 +51,35 @@ public class MunroRequest {
             return this;
         }
 
+        Builder withMinHeight(Double minHeight) {
+            this.minHeight = minHeight;
+            return this;
+        }
+
+        Builder withCategoryFilter(String categoryFilter) {
+            this.categoryFilter = MunroCategoryFilter.fromString(categoryFilter).get();
+            return this;
+        }
+
+        Builder withSorting(List<String> sorts) {
+            if(sorts == null) {
+                return this;
+            }
+            List<MunroSorts> newMunroSorts = new ArrayList<>();
+            for (int i = 0; i < sorts.size(); i = i + 2) {
+                MunroSortingFields fieldToSort = MunroSortingFields.fromString(sorts.get(i)).get();
+                boolean isAscending = sorts.get(i + 1).equals("asc");
+                newMunroSorts.add(new MunroSorts(fieldToSort, isAscending));
+            }
+            this.munroSorts = newMunroSorts;
+            return this;
+        }
+
+        Builder withMaxResults(Integer maxResults) {
+            this.maxResults = maxResults;
+            return this;
+        }
+
         public MunroRequest build() {
             return new MunroRequest(this);
         }

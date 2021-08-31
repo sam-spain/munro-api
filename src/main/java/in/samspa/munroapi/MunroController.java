@@ -23,8 +23,18 @@ public class MunroController {
     }
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<Munro> getData(@RequestParam(defaultValue = "999999") Double maxHeight) {
-        return munroService.findData(new MunroRequest.Builder().withMaxHeight(maxHeight).build());
+    public List<Munro> getData(@RequestParam(defaultValue = "999999") Double maxHeight,
+                               @RequestParam(defaultValue = "0") Double minHeight,
+                               @RequestParam(defaultValue = "all") String categoryFilter,
+                               @RequestParam(required = false) List<String> sort,
+                               @RequestParam(defaultValue = "9999") Integer maxResults) {
+        return munroService.findData(new MunroRequest.Builder()
+                .withMaxHeight(maxHeight)
+                .withMinHeight(minHeight)
+                .withCategoryFilter(categoryFilter)
+                .withSorting(sort)
+                .withMaxResults(maxResults)
+                .build());
     }
 
 }
