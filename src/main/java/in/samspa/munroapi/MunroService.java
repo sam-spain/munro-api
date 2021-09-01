@@ -23,6 +23,6 @@ public class MunroService {
         if(!munroRequest.getCategoryFilter().equals(MunroCategoryFilter.ALL)) {
             munroStream = munroStream.filter(munro -> munro.getCategory().equals(munroRequest.getCategoryFilter().name()));
         }
-        return munroStream.collect(Collectors.toList());
+        return munroStream.limit(munroRequest.getMaxResults()).collect(Collectors.toList());
     }
 }
