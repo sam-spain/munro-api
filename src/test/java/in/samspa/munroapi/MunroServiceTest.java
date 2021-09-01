@@ -70,6 +70,18 @@ class MunroServiceTest {
         assertEquals(1, returnedMunro.size());
     }
 
+    @Test
+    void sortResults() {
+        MunroRequest sortRequest = new MunroRequest.Builder().withSorting(Arrays.asList(MunroSortingFields.CATEGORY.getParam, "desc", MunroSortingFields.HEIGHT.getParam, "asc")).build();
+        List<Munro> munros = makeMunros();
+        when(mockedRepository.find()).thenReturn(munros);
+        List<Munro> sortedMunro = munroService.findData(sortRequest);
+        assertEquals("TOP", sortedMunro.get(0).getCategory());
+        assertEquals(45.5D, sortedMunro.get(1).getHeight());
+        assertEquals(45.6D, sortedMunro.get(2).getHeight());
+        assertEquals(60.6D, sortedMunro.get(3).getHeight());
+    }
+
     private List<Munro> makeMunros() {
         Munro otherMunroToFilter = new Munro("Charlie", 45.6D, "MUN", "001233");
         Munro munroToInclude = new Munro("Sam", 45.5D, "MUN", "001234");
