@@ -52,11 +52,20 @@ class MunroServiceTest {
         assertEquals(3, returnedMunro.size());
     }
 
+    @Test
+    void filterDataByCategoryTop() {
+        MunroRequest topFilter = new MunroRequest.Builder().withCategoryFilter(MunroCategoryFilter.TOP.getParam).build();
+        List<Munro> munros = makeMunros();
+        when(mockedRepository.find()).thenReturn(munros);
+        List<Munro> returnedMunro = munroService.findData(topFilter);
+        assertEquals(1, returnedMunro.size());
+    }
+
     private List<Munro> makeMunros() {
         Munro munroToInclude = new Munro("Sam", 45.5D, "MUN", "001234");
-        Munro munroTOFilter = new Munro("Bill", 60.5D, "MUN", "001234");
-        Munro otherMunroToFilter = new Munro("Charlie", 45.6D, "MUN", "001234");
-        Munro largestMunro = new Munro("Dillinger", 60.6D, "MUN", "001234");
+        Munro munroTOFilter = new Munro("Bill", 60.5D, "TOP", "001235");
+        Munro otherMunroToFilter = new Munro("Charlie", 45.6D, "MUN", "001233");
+        Munro largestMunro = new Munro("Dillinger", 60.6D, "MUN", "001232");
         return Arrays.asList(munroToInclude, munroTOFilter, otherMunroToFilter, largestMunro);
     }
 

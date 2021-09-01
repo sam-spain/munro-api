@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public class MunroService {
@@ -17,7 +18,11 @@ public class MunroService {
 
     List<Munro> findData(MunroRequest munroRequest) {
        List<Munro> munroData = munroRepository.find();
-       return munroData.stream().filter(munro -> munro.getHeight() <= munroRequest.getMaxHeight())
-               .filter(munro -> munro.getHeight() >= munroRequest.getMinHeight()).collect(Collectors.toList());
+        Stream<Munro> munroStream = munroData.stream().filter(munro -> munro.getHeight() <= munroRequest.getMaxHeight())
+                .filter(munro -> munro.getHeight() >= munroRequest.getMinHeight());
+        if(!munroRequest.getCategoryFilter().equals(MunroCategoryFilter.ALL)) {
+            munroStream = munroStream.filter(munro -> munro.getCategory().equals(munroRequest.getCategoryFilter().name()));
+        }
+        return munroStream.collect(Collectors.toList());
     }
 }
