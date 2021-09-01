@@ -17,6 +17,7 @@ public class MunroService {
 
     List<Munro> findData(MunroRequest munroRequest) {
        List<Munro> munroData = munroRepository.find();
-       return munroData.stream().filter(munro -> munro.getHeight() <= munroRequest.getMaxHeight()).collect(Collectors.toList());
+       return munroData.stream().filter(munro -> munro.getHeight() <= munroRequest.getMaxHeight())
+               .filter(munro -> munro.getHeight() >= munroRequest.getMinHeight()).collect(Collectors.toList());
     }
 }
