@@ -8,7 +8,7 @@ public enum MunroCategoryFilter {
     TOP("top"),
     ALL("all");
 
-    private String getParam;
+    String getParam;
 
     MunroCategoryFilter(String getParam) {this.getParam = getParam;}
 

@@ -10,7 +10,7 @@ public enum MunroSortingFields {
     CATEGORY("category"),
     GRID_REFERENCE("grid_reference");
 
-    private String getParam;
+    String getParam;
 
     MunroSortingFields(String getParam) {
         this.getParam = getParam;
