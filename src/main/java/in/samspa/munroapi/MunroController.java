@@ -26,7 +26,7 @@ public class MunroController {
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public List<Munro> getData(@RequestParam(defaultValue = "999999") Double maxHeight,
-                               @RequestParam(defaultValue = "0") Double minHeight,
+                               @RequestParam(defaultValue = "1") Double minHeight,
                                @RequestParam(defaultValue = "all") String categoryFilter,
                                @RequestParam(required = false) List<String> sort,
                                @RequestParam(defaultValue = "9999") Integer maxResults) {
