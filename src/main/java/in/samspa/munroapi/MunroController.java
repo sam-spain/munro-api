@@ -1,11 +1,13 @@
 package in.samspa.munroapi;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.awt.*;
 import java.util.Arrays;
@@ -24,17 +26,22 @@ public class MunroController {
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public List<Munro> getData(@RequestParam(defaultValue = "999999") Double maxHeight,
-                               @RequestParam(defaultValue = "0") Double minHeight,
+                               @RequestParam(defaultValue = "1") Double minHeight,
                                @RequestParam(defaultValue = "all") String categoryFilter,
                                @RequestParam(required = false) List<String> sort,
                                @RequestParam(defaultValue = "9999") Integer maxResults) {
-        return munroService.findData(new MunroRequest.Builder()
-                .withMaxHeight(maxHeight)
-                .withMinHeight(minHeight)
-                .withCategoryFilter(categoryFilter)
-                .withSorting(sort)
-                .withMaxResults(maxResults)
-                .build());
+
+        try {
+            return munroService.findData(new MunroRequest.Builder()
+                    .withMaxHeight(maxHeight)
+                    .withMinHeight(minHeight)
+                    .withCategoryFilter(categoryFilter)
+                    .withSorting(sort)
+                    .withMaxResults(maxResults)
+                    .build());
+        } catch (BadApiQueryException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+        }
     }
 
 }

@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 
 import org.mockito.ArgumentCaptor;
 import org.mockito.ArgumentMatchers;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -62,7 +63,7 @@ class MunroControllerTest {
         verify(munroService).findData(munroRequestCaptor.capture());
         MunroRequest sentRequest = munroRequestCaptor.getValue();
         assertEquals(999999.0D, sentRequest.getMaxHeight());
-        assertEquals(0, sentRequest.getMinHeight());
+        assertEquals(1.0, sentRequest.getMinHeight());
         assertEquals(MunroCategoryFilter.ALL, sentRequest.getCategoryFilter());
         assertEquals(9999, sentRequest.getMaxResults());
         assertEquals(Collections.emptyList(), sentRequest.getMunroSorts());
@@ -124,6 +125,13 @@ class MunroControllerTest {
         verify(munroService).findData(munroRequestCaptor.capture());
         MunroRequest sentRequest = munroRequestCaptor.getValue();
         assertEquals(10, sentRequest.getMaxResults());
+    }
+
+    @Test
+    void handleBadQueries() throws Exception {
+        mockMvc.perform(get("/").param("maxResults", "-1"))
+                .andExpect(status().isBadRequest())
+                .andExpect(status().reason(containsString("Max results should be a number above 0")));
     }
 
 }
