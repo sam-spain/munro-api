@@ -7,9 +7,9 @@ Sorting seems to be ignored in service layer despite test to show it working. Th
 
 Example http query: localhost:8080?maxResults=1000
 
-Queries:
-maxResults: int
-minHeight: double
-maxheight: double
-sort: array of strings for each category and then ascending or descending ('name' 'desc')
+Queries:\
+maxResults: int\
+minHeight: double\
+maxheight: double\
+sort: array of strings for each category and then ascending or descending ('name' 'desc')\
 categoryFilter: string
