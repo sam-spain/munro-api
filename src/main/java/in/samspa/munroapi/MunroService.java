@@ -31,7 +31,6 @@ public class MunroService {
     private Stream<Munro> sort(MunroRequest munroRequest, Stream<Munro> munroStream) {
         Comparator<Munro> munroComparator = Comparator.comparing(Munro::getGridReference);
         for (int i = 0; i < munroRequest.getMunroSorts().size() ; i++ ) {
-
             switch (munroRequest.getMunroSorts().get(i).getFieldToSort()) {
                 case NAME:
                     munroComparator = munroComparator.thenComparing(Munro::getName);

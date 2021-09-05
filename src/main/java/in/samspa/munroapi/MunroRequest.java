@@ -76,6 +76,9 @@ public class MunroRequest {
         }
 
         Builder withMaxResults(Integer maxResults) {
+            if(maxResults <= 0) {
+                throw new BadApiQueryException("Max results should be a number above 0");
+            }
             this.maxResults = maxResults;
             return this;
         }
