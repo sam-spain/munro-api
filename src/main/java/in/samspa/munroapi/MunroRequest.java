@@ -2,6 +2,7 @@ package in.samspa.munroapi;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 public class MunroRequest {
 
@@ -47,17 +48,27 @@ public class MunroRequest {
         private MunroCategoryFilter categoryFilter = MunroCategoryFilter.ALL;
 
         Builder withMaxHeight(Double maxHeight) {
+            if(maxHeight > 9999999) {
+                throw new BadApiQueryException("Maximum height cannot be above 9999999");
+            }
             this.maxHeight = maxHeight;
             return this;
         }
 
         Builder withMinHeight(Double minHeight) {
+            if(minHeight < 1) {
+                throw new BadApiQueryException("Minimum height cannot be below one");
+            }
             this.minHeight = minHeight;
             return this;
         }
 
         Builder withCategoryFilter(String categoryFilter) {
-            this.categoryFilter = MunroCategoryFilter.fromString(categoryFilter).get();
+            try{
+                this.categoryFilter = MunroCategoryFilter.fromString(categoryFilter).get();
+            }catch (NoSuchElementException e) {
+                throw new BadApiQueryException("Category filter must be 'MUN' or 'TOP'");
+            }
             return this;
         }
 
@@ -65,9 +76,17 @@ public class MunroRequest {
             if(sorts == null) {
                 return this;
             }
+            if(sorts.size() % 2 != 0) {
+                throw new BadApiQueryException("Sorting should follow format of [field, asc/desc]. e.g. 'height', 'asc'");
+            }
             List<MunroSorts> newMunroSorts = new ArrayList<>();
             for (int i = 0; i < sorts.size(); i = i + 2) {
-                MunroSortingFields fieldToSort = MunroSortingFields.fromString(sorts.get(i)).get();
+                MunroSortingFields fieldToSort;
+                try {
+                    fieldToSort = MunroSortingFields.fromString(sorts.get(i)).get();
+                }catch (NoSuchElementException e) {
+                    throw new BadApiQueryException("Can only sort fields: 'name', 'height', 'category', 'grid reference'");
+                }
                 boolean isAscending = sorts.get(i + 1).equals("asc");
                 newMunroSorts.add(new MunroSorts(fieldToSort, isAscending));
             }
@@ -78,12 +97,17 @@ public class MunroRequest {
         Builder withMaxResults(Integer maxResults) {
             if(maxResults <= 0) {
                 throw new BadApiQueryException("Max results should be a number above 0");
+            } else if (maxResults > 9999) {
+                throw new BadApiQueryException("Max results cannot be above 9999");
             }
             this.maxResults = maxResults;
             return this;
         }
 
         public MunroRequest build() {
+            if(maxHeight < minHeight) {
+                throw new BadApiQueryException("Maximum height cannot be below minimum height");
+            }
             return new MunroRequest(this);
         }
     }
