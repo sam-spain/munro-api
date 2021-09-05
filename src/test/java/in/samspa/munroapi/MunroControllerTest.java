@@ -63,7 +63,7 @@ class MunroControllerTest {
         verify(munroService).findData(munroRequestCaptor.capture());
         MunroRequest sentRequest = munroRequestCaptor.getValue();
         assertEquals(999999.0D, sentRequest.getMaxHeight());
-        assertEquals(0, sentRequest.getMinHeight());
+        assertEquals(1.0, sentRequest.getMinHeight());
         assertEquals(MunroCategoryFilter.ALL, sentRequest.getCategoryFilter());
         assertEquals(9999, sentRequest.getMaxResults());
         assertEquals(Collections.emptyList(), sentRequest.getMunroSorts());
